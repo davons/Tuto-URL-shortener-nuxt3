@@ -4,8 +4,8 @@
             Connexion
         </h2>
         <form class="mt-8 space-y-6 text-left" action="#">
-            <BaseInput type="email" label="Email" placeholder="jean@gmail.com"/>
-            <BaseInput type="password" label="Mot de passe" placeholder="••••••••"/>
+            <BaseInput type="email" id="email" name="email" label="Email" placeholder="jean@gmail.com"/>
+            <BaseInput type="password" id="password" name="password" label="Mot de passe" placeholder="••••••••"/>
             <div class="flex items-start">
                 <NuxtLink to="/auth/forgot-password" class="ml-auto text-sm font-medium text-blue-600 hover:underline">Mot de passe oublié?</NuxtLink>
             </div>
