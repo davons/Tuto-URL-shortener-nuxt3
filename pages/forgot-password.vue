@@ -7,7 +7,7 @@
             <BaseInput type="email" id="email" name="email" label="Email" placeholder="jean@gmail.com"/>
             <BaseButton>Réinitialiser mot de passe</BaseButton>
             <div class="text-sm font-medium text-gray-900">
-                Pas encore inscrit? <NuxtLink to="/auth/register" class="text-blue-600 hover:underline">Créer un compte</NuxtLink>
+                Pas encore inscrit? <NuxtLink to="/register" class="text-blue-600 hover:underline">Créer un compte</NuxtLink>
             </div>
         </form>
     </div>
@@ -15,6 +15,7 @@
 
 <script setup>
 definePageMeta({
-    layout: "auth"
+    layout: "auth",
+    middleware: ["guest"]
 })
 </script>
