@@ -20,11 +20,39 @@ export const useAuthStore = defineStore('auth', () => {
 
     //register an user
     async function register(payload: Registration) {
-        await useApiFetch('/users', {
+        await useApiFetch('/register', {
             method: "POST",
             body: payload
         })
     }
+
+    //forgot password
+    async function forgotPassword(payload: any) {
+        await useApiFetch('/forgot-password', {
+            method: "POST",
+            body: payload
+        })
+    }
+
+    //change password
+    async function changePassword(payload: any) {
+        await useApiFetch('/change-password', {
+            method: "POST",
+            body: payload,
+            headers: {
+                Authorization: `Bearer ${token.value}`,
+            }
+        })
+    }
+
+    //reset password
+    async function resetPassword(payload: any) {
+        await useApiFetch('/reset-password', {
+            method: "POST",
+            body: payload
+        })
+    }
+    
 
     //logout
     async function logout() {
@@ -37,7 +65,7 @@ export const useAuthStore = defineStore('auth', () => {
 
     //fetch the current user
     async function fetchUser() {
-        const { data, error } = await useApiFetch('/me', {
+        const { data, error } = await useApiFetch('/profile', {
             method: 'GET',
             headers: {
                 Authorization: `Bearer ${token.value}`,
@@ -56,6 +84,9 @@ export const useAuthStore = defineStore('auth', () => {
         login, 
         fetchUser, 
         logout,
-        register
+        register,
+        forgotPassword,
+        changePassword,
+        resetPassword,
     }
 })
