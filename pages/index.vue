@@ -14,6 +14,9 @@
 </template>
 
 <script setup>
+useSeoMeta({
+  title: 'Accueil',
+})
 definePageMeta({
     layout: "auth",
     middleware: ["guest"]

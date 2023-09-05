@@ -21,7 +21,10 @@
         </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
+useSeoMeta({
+  title: 'Mot de passe oublié',
+})
 definePageMeta({
     layout: "auth",
     middleware: ["guest"]
