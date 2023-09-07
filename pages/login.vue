@@ -8,17 +8,21 @@
                     <h2 class="text-2xl font-bold text-gray-900">
                         Connexion
                     </h2>
-                    <form @submit.prevent="handleLogin" class="mt-8 space-y-6 text-left">
-                        <BaseInput v-model="form.email" type="email" id="email" name="email" label="Email" placeholder="jean@gmail.com"/>
-                        <BaseInput v-model="form.password" type="password" id="password" name="password" label="Mot de passe" placeholder="••••••••"/>
-                        <div class="flex items-start">
-                            <NuxtLink to="/forgot-password" class="ml-auto text-sm font-medium text-blue-600 hover:underline">Mot de passe oublié?</NuxtLink>
-                        </div>
-                        <BaseButton type="submit">Se connecter</BaseButton>
+                    <Form
+                        @submit="onSubmit"
+                        :validation-schema="schema"
+                        @invalid-submit="onInvalidSubmit"
+                        class="mt-8 space-y-6 text-left">
+                            <BaseInput type="email" id="email" name="email" label="Email" placeholder="jean@gmail.com"/>
+                            <BaseInput type="password" id="password" name="password" label="Mot de passe" placeholder="••••••••"/>
+                            <div class="flex items-start">
+                                <NuxtLink to="/forgot-password" class="ml-auto text-sm font-medium text-blue-600 hover:underline">Mot de passe oublié?</NuxtLink>
+                            </div>
+                            <BaseButton type="submit">Se connecter</BaseButton>
                         <div class="text-sm font-medium text-gray-900">
                             Pas encore inscrit? <NuxtLink to="/register" class="text-blue-600 hover:underline">Créer un compte</NuxtLink>
                         </div>
-                    </form>
+                    </Form>
                 </div>
             </div>
         </div>
@@ -26,10 +30,13 @@
 
 <script setup lang="ts">
 import { useAuthStore } from "@/stores/useAuthStore"
+import { Form } from 'vee-validate'
+import * as Yup from 'yup';
 
 useSeoMeta({
   title: 'Login',
 })
+
 definePageMeta({
     layout: "auth",
     middleware: ["guest"]
@@ -38,18 +45,25 @@ definePageMeta({
 const router = useRouter();
 const auth = useAuthStore();
 
-const form = ref({
-    email: "",
-    password: ""
-})
+const schema = Yup.object().shape({
+    email: Yup.string().email('Adresse email incorrect').required(),
+    password: Yup.string().min(4, "Mot de passe trop court").required(),
+});
 
-async function handleLogin() {
-    try {
-        await auth.login(form.value)
-        router.push({ path:'/links', replace: true})
-    }catch(e) {
+async function onSubmit(values: any) {
+  try {
+        await auth.login(values)
+        if (auth.isLoggedIn) {
+            router.push({ path:'/links', replace: true})
+        }
+    } catch(e) {
         console.log(e)
     }
-    
 }
+
+function onInvalidSubmit() {
+  //const submitBtn = document.querySelector('.submit-btn');
+  console.log('xxxxxxxxxx')
+}
+
 </script>

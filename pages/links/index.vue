@@ -16,32 +16,33 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {{ links }}
-                    <tr v-for="link in links" :key="link.id" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                            {{ link.shortLink }}
-                        </th>
-                        <td class="px-6 py-4">
-                            {{ link.createdAt }}
-                        </td>
-                        <td class="px-6 py-4">
-                            {{ link.updatedAt }}
-                        </td>
-                    </tr>
+                    <template v-if="linkStore.links?.length">
+                        <tr v-for="link in linkStore.links" :key="link.id" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                {{ link.shortLink }}
+                            </th>
+                            <td class="px-6 py-4">
+                                {{ link.createdAt }}
+                            </td>
+                            <td class="px-6 py-4">
+                                {{ link.updatedAt }}
+                            </td>
+                        </tr>
+                    </template>
                 </tbody>
             </table>
         </div>
       </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useLinkStore } from '@/stores/useLinkStore';
 
 definePageMeta({
     middleware: ["authenticated"]
 })
-const { links } = useLinkStore();
-
+const linkStore = useLinkStore();
+useAsyncData(async() => await linkStore.getAll())
 </script>
 
 <style>

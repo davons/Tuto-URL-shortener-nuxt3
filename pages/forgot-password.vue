@@ -9,19 +9,27 @@
                     <h2 class="text-2xl font-bold text-gray-900">
                         Mot de passe oublié ?
                     </h2>
-                    <form class="mt-8 space-y-6 text-left" action="#">
-                        <BaseInput type="email" id="email" name="email" label="Email" placeholder="jean@gmail.com"/>
-                        <BaseButton>Réinitialiser mot de passe</BaseButton>
-                        <div class="text-sm font-medium text-gray-900">
-                            Pas encore inscrit? <NuxtLink to="/register" class="text-blue-600 hover:underline">Créer un compte</NuxtLink>
-                        </div>
-                    </form>
+                    <Form
+                        @submit="onSubmit"
+                        :validation-schema="schema"
+                        @invalid-submit="onInvalidSubmit"
+                        class="mt-8 space-y-6 text-left" action="#">
+                            <BaseInput type="email" id="email" name="email" label="Email" placeholder="jean@gmail.com"/>
+                            <BaseButton type="submit">Réinitialiser mot de passe</BaseButton>
+                            <div class="text-sm font-medium text-gray-900">
+                                Pas encore inscrit? <NuxtLink to="/register" class="text-blue-600 hover:underline">Créer un compte</NuxtLink>
+                            </div>
+                    </Form>
                 </div>
             </div>
         </div>
 </template>
 
 <script setup lang="ts">
+import { useAuthStore } from "@/stores/useAuthStore"
+import { Form } from 'vee-validate'
+import * as Yup from 'yup';
+
 useSeoMeta({
   title: 'Mot de passe oublié',
 })
@@ -29,4 +37,26 @@ definePageMeta({
     layout: "auth",
     middleware: ["guest"]
 })
+
+const router = useRouter();
+const auth = useAuthStore();
+
+const schema = Yup.object().shape({
+    email: Yup.string().email('Adresse email incorrect').required(),
+});
+
+async function onSubmit(values: any) {
+  try {
+      const data = await auth.forgotPassword(values)
+      console.log(data)
+    } catch(e) {
+        console.log(e)
+    }
+}
+
+function onInvalidSubmit() {
+  //const submitBtn = document.querySelector('.submit-btn');
+  console.log('xxxxxxxxxx')
+}
+
 </script>

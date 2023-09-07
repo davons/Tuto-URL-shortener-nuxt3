@@ -7,6 +7,6 @@ export default defineNuxtConfig({
       }
   },
   modules: [
-    "@vueuse/nuxt", "@nuxtjs/tailwindcss", "@pinia/nuxt", "nuxt-icon"
+    "@vueuse/nuxt", "@nuxtjs/tailwindcss", "@pinia/nuxt", "nuxt-icon", "@vee-validate/nuxt"
   ]
 })

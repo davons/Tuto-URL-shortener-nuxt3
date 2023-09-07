@@ -1,21 +1,21 @@
-export interface User {
+export interface IUser {
     id?: string
     name: string
     email: string
 }
 
-export interface Credentials {
+export interface ICredentials {
     email: string
     password: string
 }
 
-export interface Registration {
+export interface IRegistration {
     name: string
     email: string
     plainPassword: string
 }
 
-export interface Link {
+export interface ILink {
     id?: string
     shortLink: string
     fullLink: string 

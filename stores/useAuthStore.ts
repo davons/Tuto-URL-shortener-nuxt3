@@ -1,25 +1,26 @@
 import { defineStore } from "pinia"
-import type { User, Credentials, Registration } from '@/types'
+import type { IUser, ICredentials, IRegistration } from '@/types'
+import { useStorage } from '@vueuse/core'
 
 export const useAuthStore = defineStore('auth', () => {
-    const user = ref<User | null>(null)
-    const token = ref<string | null>(null)
+    const user = ref<IUser | null>(null)
+    const token = useStorage('AUTH_TOKEN', null)
     const isLoggedIn = computed(() => !!user.value)
     
     //login with email and password
-    async function login(payload: Credentials) {
+    async function login(payload: ICredentials) {
         const { data, error } = await useApiFetch('/login', {
             method: "POST",
             body: payload
         })
         if (!error.value) {
-            token.value = data.value?.token as string
+            token.value = data.value?.token
             await fetchUser();
         }
     }
 
     //register an user
-    async function register(payload: Registration) {
+    async function register(payload: IRegistration) {
         await useApiFetch('/register', {
             method: "POST",
             body: payload
@@ -28,10 +29,13 @@ export const useAuthStore = defineStore('auth', () => {
 
     //forgot password
     async function forgotPassword(payload: any) {
-        await useApiFetch('/forgot-password', {
+        const {data, error} = await useApiFetch('/forgot-password', {
             method: "POST",
             body: payload
         })
+        if (!error.value) {
+            return data.value
+        }
     }
 
     //change password
@@ -53,14 +57,10 @@ export const useAuthStore = defineStore('auth', () => {
         })
     }
     
-
     //logout
     async function logout() {
-        /*await useApiFetch('/logout', {
-            method: "POST"
-        })*/
         user.value = null
-        token.value = ""
+        token.value = null
     }
 
     //fetch the current user
@@ -73,7 +73,7 @@ export const useAuthStore = defineStore('auth', () => {
             pick: ['id', 'name', 'email'],
         })
         if (!error.value) {
-            user.value = data.value as User
+            user.value = data.value as IUser
         }
     }
 

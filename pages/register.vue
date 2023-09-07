@@ -8,15 +8,19 @@
                     <h2 class="text-2xl font-bold text-gray-900">
                         Inscription
                     </h2>
-                    <form @submit.prevent="handleRegister" class="mt-8 space-y-6 text-left" action="#">
-                        <BaseInput v-model="form.name" type="text" id="name" name="name" label="Nom" placeholder="Jean Dupon"/>
-                        <BaseInput v-model="form.email" type="email" id="email" name="email" label="Email" placeholder="jean@gmail.com"/>
-                        <BaseInput v-model="form.plainPassword" type="password" id="password" label="Mot de passe" placeholder="••••••••"/>
-                        <BaseButton type="submit">Enregistrer</BaseButton>
-                        <div class="text-sm font-medium text-gray-900">
-                            Déjà inscrit? <NuxtLink to="/login" class="text-blue-600 hover:underline">Se connecter</NuxtLink>
-                        </div>
-                    </form>
+                    <Form
+                        @submit="onSubmit"
+                        :validation-schema="schema"
+                        @invalid-submit="onInvalidSubmit"
+                        class="mt-8 space-y-6 text-left" action="#">
+                            <BaseInput type="text" id="name" name="name" label="Nom" placeholder="Jean Dupon"/>
+                            <BaseInput type="email" id="email" name="email" label="Email" placeholder="jean@gmail.com"/>
+                            <BaseInput  type="password" id="password" name="plainPassword" label="Mot de passe" placeholder="••••••••"/>
+                            <BaseButton type="submit">Enregistrer</BaseButton>
+                            <div class="text-sm font-medium text-gray-900">
+                                Déjà inscrit? <NuxtLink to="/login" class="text-blue-600 hover:underline">Se connecter</NuxtLink>
+                            </div>
+                    </Form>
                 </div>
             </div>
         </div>
@@ -24,6 +28,8 @@
 
 <script setup lang="ts">
 import { useAuthStore } from "@/stores/useAuthStore"
+import { Form } from "vee-validate"
+import * as Yup from "yup"
 
 useSeoMeta({
   title: 'Inscription',
@@ -33,24 +39,32 @@ definePageMeta({
     middleware: ["guest"]
 })
 
-const form = ref({
-    email: "",
-    name:"",
-    plainPassword: ""
-})
-
 const auth = useAuthStore()
 const router = useRouter()
 
-async function handleRegister() {
+const schema = Yup.object().shape({
+    name: Yup.string().min(4, "Nom trop courte").required(),
+    email: Yup.string().email("Adresse email incorrect").required(),
+    plainPassword: Yup.string().min(4, "TMot de passe trop courte").required(),
+});
+
+async function onSubmit(values: any) {
     try {
         
-        await auth.register(form.value)
-        await auth.login({email: form.value.email, password: form.value.plainPassword})
-        router.push({ path:'/links', replace: true})
+        await auth.register(values)
+        await auth.login({ email: values.email, password: values.plainPassword })
+        if (auth.isLoggedIn) {
+            router.push({ path:'/links', replace: true})
+        }
 
     } catch(e) {
         console.log(e)
     }
 }
+
+function onInvalidSubmit() {
+  //const submitBtn = document.querySelector('.submit-btn');
+  console.log('xxxxxxxxxx')
+}
+
 </script>

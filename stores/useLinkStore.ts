@@ -1,9 +1,9 @@
 import { defineStore } from "pinia"
-import type { Link } from '@/types'
+import type { ILink } from '@/types'
 import { useAuthStore } from "./useAuthStore"
 
 export const useLinkStore = defineStore('link', () => {
-    const links = ref<Link[] | null>(null)
+    const links = ref<ILink[] | null>(null)
     const { token } = useAuthStore()
 
     //Get all links from DB
@@ -14,13 +14,13 @@ export const useLinkStore = defineStore('link', () => {
                 Authorization: `Bearer ${token}`,
             },
         })
-        links.value = data.value as Link[]
+        links.value = data.value as ILink[]
     }
 
     //create a link
-    async function create(payload: Link) {
+    async function create(payload: ILink) {
         const { error } = await useApiFetch(`/links`, {
-            method: 'GET',
+            method: 'POST',
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -32,12 +32,13 @@ export const useLinkStore = defineStore('link', () => {
     }
 
     //update a link
-    async function update(id: any) {
+    async function update(id: string, payload: ILink) {
         const { data, error} = await useApiFetch(`/links/${id}`, {
-            method: 'GET',
+            method: 'PUT',
             headers: {
                 Authorization: `Bearer ${token}`,
             },
+            body: payload
         })
         if (!error.value) {
             getAll()
@@ -45,9 +46,9 @@ export const useLinkStore = defineStore('link', () => {
     }
 
     //delete a link
-    async function remove(id: any) {
+    async function remove(id: string) {
         const { data, error } = await useApiFetch(`/links/${id}`, {
-            method: 'POST',
+            method: 'DELETE',
             headers: {
                 Authorization: `Bearer ${token}`,
             },
