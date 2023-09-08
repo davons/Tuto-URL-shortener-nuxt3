@@ -1,7 +1,11 @@
 export interface IUser {
-    id?: string
+    id: string
     name: string
     email: string
+    isActive: boolean
+    emailVerifiedAt?: Date
+    createdAt?: Date 
+    updatedAt?: Date
 }
 
 export interface ICredentials {
@@ -12,7 +16,7 @@ export interface ICredentials {
 export interface IRegistration {
     name: string
     email: string
-    plainPassword: string
+    password: string
 }
 
 export interface ILink {
@@ -21,4 +25,5 @@ export interface ILink {
     fullLink: string 
     createdAt?: Date 
     updatedAt?: Date
+    ownerId: Object
 }

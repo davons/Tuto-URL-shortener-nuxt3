@@ -1,7 +1,7 @@
 
 <template>
-    
 </template>
+
 <script setup>
 useSeoMeta({
   title: 'Tableau de board',

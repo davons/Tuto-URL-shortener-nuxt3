@@ -3,34 +3,41 @@
         <h2 class="text-2xl font-bold text-gray-900">
             Créer un nouveau lien
         </h2>
-        <form @submit.prevent="handleCreateLink" class="mt-8 space-y-6 text-left">
-            <BaseInput v-model="form.full_link" type="text" id="full_link" name="full_link" label="Lien" placeholder="http://..."/>
-            <BaseButton type="submit">Créer lien</BaseButton>
-        </form>
+        <Form
+             @submit="onSubmit"
+             :validation-schema="schema"
+             class="mt-8 space-y-6 text-left">
+                <BaseInput type="text" id="full_link" name="full_link" label="Lien" placeholder="http://..."/>
+                <BaseButton type="submit">Créer lien</BaseButton>
+        </Form>
     </div>
 </template>
 
 <script setup>
 import { useAuthStore } from "@/stores/useAuthStore"
 import { nanoid } from "nanoid"
+import { Form } from 'vee-validate'
+import * as Yup from 'yup';
 
 definePageMeta({
     middleware: ["authenticated"]
 })
 
-const form = ref({
-    short_link: "",
-    full_link: ""
-})
-
 const auth = useAuthStore()
 
-async function handleCreateLink() {
-    try {
+const schema = Yup.object().shape({
+    full_link: Yup.string().email('Adresse email incorrect').required(),
+});
+
+async function onSubmit(values) {
+  try {
         await auth.create({
-            ...form.value,
+            ...values,
             short_link: nanoid()
         })
+
+        router.push({ path:'/links'})
+
     } catch(e) {
         console.log(e)
     }

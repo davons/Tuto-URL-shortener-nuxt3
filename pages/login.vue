@@ -11,7 +11,6 @@
                     <Form
                         @submit="onSubmit"
                         :validation-schema="schema"
-                        @invalid-submit="onInvalidSubmit"
                         class="mt-8 space-y-6 text-left">
                             <BaseInput type="email" id="email" name="email" label="Email" placeholder="jean@gmail.com"/>
                             <BaseInput type="password" id="password" name="password" label="Mot de passe" placeholder="••••••••"/>
@@ -46,8 +45,8 @@ const router = useRouter();
 const auth = useAuthStore();
 
 const schema = Yup.object().shape({
-    email: Yup.string().email('Adresse email incorrect').required(),
-    password: Yup.string().min(4, "Mot de passe trop court").required(),
+    email: Yup.string().email('Adresse email incorrect.').required(),
+    password: Yup.string().min(4, "Mot de passe trop court.").required(),
 });
 
 async function onSubmit(values: any) {
@@ -60,10 +59,4 @@ async function onSubmit(values: any) {
         console.log(e)
     }
 }
-
-function onInvalidSubmit() {
-  //const submitBtn = document.querySelector('.submit-btn');
-  console.log('xxxxxxxxxx')
-}
-
 </script>
