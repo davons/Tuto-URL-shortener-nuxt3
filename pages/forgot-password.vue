@@ -41,7 +41,7 @@ const router = useRouter();
 const auth = useAuthStore();
 
 const schema = Yup.object().shape({
-    email: Yup.string().email('Adresse email incorrect.').required(),
+    email: Yup.string().email('Email incorrect.').required('Ce champ est obligatoire.'),
 });
 
 async function onSubmit(values: any) {

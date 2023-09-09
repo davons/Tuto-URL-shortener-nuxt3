@@ -14,7 +14,7 @@
 </template>
 
 <script setup>
-import { useAuthStore } from "@/stores/useAuthStore"
+import { useLinkStore } from "@/stores/useLinkStore";
 import { nanoid } from "nanoid"
 import { Form } from 'vee-validate'
 import * as Yup from 'yup';
@@ -23,17 +23,18 @@ definePageMeta({
     middleware: ["authenticated"]
 })
 
-const auth = useAuthStore()
+const router = useRouter()
+const link = useLinkStore()
 
 const schema = Yup.object().shape({
-    full_link: Yup.string().email('Adresse email incorrect').required(),
+    full_link: Yup.string().url('URL incorrect').required('Ce champ est obligatoire.'),
 });
 
 async function onSubmit(values) {
   try {
-        await auth.create({
-            ...values,
-            short_link: nanoid()
+        await link.create({
+            fullLink: values.full_link,
+            shortLink: nanoid()
         })
 
         router.push({ path:'/links'})

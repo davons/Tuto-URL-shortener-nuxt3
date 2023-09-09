@@ -4,7 +4,7 @@ import { useStorage } from '@vueuse/core'
 
 export const useAuthStore = defineStore('auth', () => {
     const user = ref<IUser | null>(null)
-    const token = useStorage('AUTH_TOKEN', null)
+    const token = ref<string | null>('')
     const isLoggedIn = computed(() => !!user.value)
     
     //login with email and password

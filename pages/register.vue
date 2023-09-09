@@ -44,9 +44,9 @@ const auth = useAuthStore()
 const router = useRouter()
 
 const schema = Yup.object().shape({
-    name: Yup.string().min(4, "Nom trop courte.").required(),
-    email: Yup.string().email("Adresse email incorrect.").required(),
-    password: Yup.string().min(6, "Mot de passe trop courte.").required(),
+    name: Yup.string().min(4, "Nom trop courte.").required('Ce champ est obligatoire.'),
+    email: Yup.string().email("Email incorrect.").required('Ce champ est obligatoire.'),
+    password: Yup.string().min(6, "Mot de passe trop courte.").required('Ce champ est obligatoire.'),
     confirmPassword: Yup.string().min(6, "Le mot de passe doit être le même.")
         .required()
         .oneOf([Yup.ref('password')], 'Les mots de passe ne correspondent pas.'),

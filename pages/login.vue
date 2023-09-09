@@ -45,13 +45,14 @@ const router = useRouter();
 const auth = useAuthStore();
 
 const schema = Yup.object().shape({
-    email: Yup.string().email('Adresse email incorrect.').required(),
-    password: Yup.string().min(4, "Mot de passe trop court.").required(),
+    email: Yup.string().email('Adresse email incorrect.').required('Ce champ est obligatoire.'),
+    password: Yup.string().min(4, "Mot de passe trop court.").required('Ce champ est obligatoire.'),
 });
 
 async function onSubmit(values: any) {
   try {
         await auth.login(values)
+
         if (auth.isLoggedIn) {
             router.push({ path:'/links', replace: true})
         }
