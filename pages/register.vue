@@ -8,6 +8,16 @@
                     <h2 class="text-2xl font-bold text-gray-900">
                         Inscription
                     </h2>
+                    <div v-if="hasErrors.value?.detail" class="flex items-center p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
+                        <svg class="flex-shrink-0 inline w-4 h-4 mr-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                        </svg>
+                        <span class="sr-only">Info</span>
+                        <div >
+                            <span class="font-medium">Danger alert!</span>
+                            {{ hasErrors.value?.detail }}
+                        </div>
+                    </div>
                     <Form
                         @submit="onSubmit"
                         :validation-schema="schema"
@@ -28,6 +38,7 @@
 
 <script setup lang="ts">
 import { useAuthStore } from "@/stores/useAuthStore"
+import { storeToRefs } from "pinia"
 import { Form } from "vee-validate"
 import * as Yup from "yup"
 
@@ -40,8 +51,9 @@ definePageMeta({
     middleware: ["guest"]
 })
 
-const auth = useAuthStore()
+const authStore = useAuthStore()
 const router = useRouter()
+const { hasErrors } = storeToRefs(authStore)
 
 const schema = Yup.object().shape({
     name: Yup.string().min(4, "Nom trop courte.").required('Ce champ est obligatoire.'),
@@ -53,10 +65,7 @@ const schema = Yup.object().shape({
 });
 
 async function onSubmit(values: any) {
-    try {
-        await auth.register({name: values.name, email: values.email, password: values.password })
-    } catch(e) {
-        console.log(e)
-    }
+    await authStore.register({name: values.name, email: values.email, password: values.password })
+    console.log(hasErrors)
 }
 </script>

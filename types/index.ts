@@ -1,11 +1,14 @@
 export interface IUser {
+    "@context": string
+    "@id": string
+    "@type": string
     id: string
     name: string
     email: string
-    isActive: boolean
+    isActive: true,
+    createdAt: Date
+    updatedAt: Date
     emailVerifiedAt?: Date
-    createdAt?: Date 
-    updatedAt?: Date
 }
 
 export interface ICredentials {
@@ -20,10 +23,20 @@ export interface IRegistration {
 }
 
 export interface ILink {
+    "@context"?: string
+    "@id"?: string
+    "@type"?: string
     id?: string
     shortLink: string
-    fullLink: string 
-    createdAt?: Date 
-    updatedAt?: Date
-    ownerId: Object
+    fullLink: string
+    createdAt?: Date
+    updatedAt?:Date
+    owner?: Object
+}
+
+export interface IResponse {
+    "hydra:member":Object[]
+    "hydra:totalItems": number
+    "hydra:view": Object
+    "hydra:search": Object
 }
